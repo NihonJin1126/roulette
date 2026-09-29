@@ -242,6 +242,9 @@
     const wheel = document.getElementById("wheel");
     const button = document.getElementById("button");
     const result = document.getElementById("result");
+const winnerSound = new Audio("congratulations.mp3");
+winnerSound.volume = 0.8;
+    
     // 🎊 紙吹雪を発射する
 function launchConfetti() {
 
@@ -364,11 +367,15 @@ function launchConfetti() {
 
       const selected = items[index];
 
-      if (selected.includes("当たり")) {
+if (selected.includes("当たり")) {
   result.textContent = "🎉 大当たり！！ 🎉";
 
-  // 🎊 紙吹雪！！
+  // 🎊 紙吹雪
   launchConfetti();
+
+  // 🎺 ファンファーレ
+  winnerSound.currentTime = 0;
+  winnerSound.play();
 
 } else {
   result.textContent = "残念！ はずれ！";
