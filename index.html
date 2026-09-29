@@ -176,6 +176,35 @@
       font-size: 13px;
       margin-bottom: 25px;
     }
+    /* =========================
+   🎊 紙吹雪
+========================= */
+
+.confetti {
+  position: fixed;
+  width: 12px;
+  height: 20px;
+  top: -30px;
+  z-index: 9999;
+  pointer-events: none;
+  animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform:
+      translate3d(0, -20px, 0)
+      rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate3d(var(--drift), 110vh, 0)
+      rotate(var(--spin));
+    opacity: 0.8;
+  }
+}
   </style>
 </head>
 
@@ -213,6 +242,71 @@
     const wheel = document.getElementById("wheel");
     const button = document.getElementById("button");
     const result = document.getElementById("result");
+    // 🎊 紙吹雪を発射する
+function launchConfetti() {
+
+  const colors = [
+    "#ff1744",
+    "#ffd600",
+    "#00e676",
+    "#2979ff",
+    "#d500f9",
+    "#ff9100",
+    "#ffffff"
+  ];
+
+  // 紙吹雪を180枚作る
+  for (let i = 0; i < 180; i++) {
+
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+
+    // 横位置
+    confetti.style.left = Math.random() * 100 + "vw";
+
+    // 色
+    confetti.style.backgroundColor =
+      colors[Math.floor(Math.random() * colors.length)];
+
+    // 大きさ
+    const size = 6 + Math.random() * 10;
+    confetti.style.width = size + "px";
+    confetti.style.height = size * 1.7 + "px";
+
+    // 落下時間
+    const duration = 2.5 + Math.random() * 3;
+    confetti.style.animationDuration = duration + "s";
+
+    // 発射タイミングを少しずらす
+    confetti.style.animationDelay =
+      Math.random() * 0.8 + "s";
+
+    // 左右への揺れ
+    const drift =
+      (Math.random() - 0.5) * 500;
+
+    confetti.style.setProperty(
+      "--drift",
+      drift + "px"
+    );
+
+    // 回転数
+    const spin =
+      360 + Math.random() * 1440;
+
+    confetti.style.setProperty(
+      "--spin",
+      spin + "deg"
+    );
+
+    document.body.appendChild(confetti);
+
+    // アニメーション終了後に削除
+    setTimeout(() => {
+      confetti.remove();
+    }, (duration + 1) * 1000);
+  }
+}
 
     // 上から時計回りの8マス
     const items = [
@@ -271,10 +365,14 @@
       const selected = items[index];
 
       if (selected.includes("当たり")) {
-        result.textContent = "🎉 大当たり！！ 🎉";
-      } else {
-        result.textContent = "残念！ はずれ！";
-      }
+  result.textContent = "🎉 大当たり！！ 🎉";
+
+  // 🎊 紙吹雪！！
+  launchConfetti();
+
+} else {
+  result.textContent = "残念！ はずれ！";
+}
 
       button.textContent = "もう一度！";
       button.classList.remove("stop");
